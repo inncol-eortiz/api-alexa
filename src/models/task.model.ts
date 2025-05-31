@@ -13,7 +13,7 @@ const TaskSchema = new Schema(
     taskNumber: {
       type: Number,
       unique: true,
-      required: true,
+      // Quitamos required: true ya que será generado automáticamente
     }
   },
   { timestamps: true }
@@ -22,8 +22,13 @@ const TaskSchema = new Schema(
 TaskSchema.pre('save', async function(next) {
   if (this.isNew) {
     try {
-      const maxTask = await Task.findOne().sort({ taskNumber: -1 });
-      this.taskNumber = maxTask ? maxTask.taskNumber + 1 : 1;
+      // Si no tiene taskNumber asignado, buscamos el máximo y asignamos el siguiente
+      if (!this.taskNumber) {
+        const maxTask = await Task.findOne().sort({ taskNumber: -1 });
+        
+        // Fix: Add null/undefined check for maxTask and maxTask.taskNumber
+        this.taskNumber = maxTask && maxTask.taskNumber ? maxTask.taskNumber + 1 : 1;
+      }
       next();
     } catch (error) {
       if (error instanceof Error) {
