@@ -27,7 +27,7 @@ export const createTask = async (req: Request, res: Response) => {
     await task.save();
     res.status(201).json(task);
   } catch (error) {
-    res.status(400).json({ message: 'Error creating task' });
+    res.status(400).json({ message: 'Error creating task', error: error instanceof Error ? error.message : 'Unknown error' });
   }
 };
 
@@ -44,7 +44,7 @@ export const getTaskById = async (req: Request, res: Response): Promise<void> =>
     
     res.json(task);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching task' });
+    res.status(500).json({ message: 'Error fetching task', error: error instanceof Error ? error.message : 'Unknown error'  });
   }
 };
 
@@ -68,7 +68,7 @@ export const getTaskByNumber = async (req: Request, res: Response): Promise<void
     
     res.json(task);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching task' });
+    res.status(500).json({ message: 'Error fetching task', error: error instanceof Error ? error.message : 'Unknown error'  });
   }
 };
 
@@ -109,7 +109,7 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
     
     res.json(updatedTask);
   } catch (error) {
-    res.status(400).json({ message: 'Error updating task' });
+    res.status(400).json({ message: 'Error updating task', error: error instanceof Error ? error.message : 'Unknown error'  });
   }
 };
 
@@ -142,6 +142,6 @@ export const deleteTask = async (req: Request, res: Response): Promise<void> => 
     
     res.json({ message: 'Task deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting task' });
+    res.status(500).json({ message: 'Error deleting task', error: error instanceof Error ? error.message : 'Unknown error'  });
   }
 };
